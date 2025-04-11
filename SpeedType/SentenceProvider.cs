@@ -26,8 +26,8 @@ namespace SpeedType
         /// </remarks>
         public SentenceProvider()
         {
-            random = // ////////// => TO IMPLEMENT <= //////////// //
-            
+            random = new Random(); // Initialize the Random instance
+
             string directoryPath = Path.GetFullPath(
                 Path.Combine(
                     AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"
@@ -37,12 +37,13 @@ namespace SpeedType
 
             if (File.Exists(filePath))
             {
-                sentences = // ////////// => TO IMPLEMENT <= //////////// //
+                sentences = File.ReadAllLines(filePath)
+                                .Select(line => line.Humanize())
+                                .ToArray(); // Read and process sentences
             }
             else
             {
-                sentences = new[] { "No Sentences Found! Please Provide a"
-                    + " File." };
+                sentences = new[] { "No Sentences Found! Please Provide a File." };
             }
         }
 
@@ -55,7 +56,13 @@ namespace SpeedType
         /// </returns>
         public string GetRandomSentence()
         {
-            // ////////// => TO IMPLEMENT <= //////////// //
+            if (sentences.Length == 0)
+            {
+                return "No Sentences Found! Please Provide a File.";
+            }
+
+            int index = random.Next(sentences.Length); // Get a random index
+            return sentences[index];
         }
     }
 }
