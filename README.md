@@ -1,4 +1,4 @@
-´´´mermaid
+```mermaid
 classDiagram
     class Program {
         +static void Main(string[] args)
@@ -38,4 +38,4 @@ classDiagram
     Evaluator --> GameResult
     Game --> SentenceProvider
 
-´´´
+```
