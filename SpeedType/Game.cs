@@ -55,7 +55,7 @@ namespace SpeedType
                 string choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[bold yellow]Speed Type[/]")
-                        .AddChoices("Start Game", "View Game Stats", "Quit"));
+                        .AddChoices("Start Game", "View Game Stats", "View Players Accuracy", "Quit"));
 
                 switch (choice)
                 {
@@ -65,6 +65,9 @@ namespace SpeedType
                     case "View Game Stats":
                         ShowGameStats();
                         break;
+                    case "View Players Accuracy":
+                        ShowGameAccuracy();
+                        break;                           
                     case "Quit":
                         return;
                 }
@@ -161,6 +164,47 @@ namespace SpeedType
             AnsiConsole.Write(table);
             AnsiConsole.Markup("\n[bold green]Press Enter to Return to Menu...[/]");
             Console.ReadLine();
+        }
+        private void ShowGameAccuracy()
+        {
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[bold yellow]Players Accuracy:[/]");
+            // Agrupar precisões por intervalos de 10%
+            var accuracyGroups = new Dictionary<string, int>();
+            for (int i = 0; i < 10; i++)
+            {
+                string range = $"{i * 10}% - {(i * 10) + 9}%";
+                accuracyGroups[range] = 0;
+            }
+            accuracyGroups["100%"] = 0;
+
+            foreach (var result in gameStats)
+            {
+                if (result != null)
+                {
+                    // Calcular o grupo de precisão
+                    int group = result.Accuracy / 10;
+                    string range = group == 10 ? "100%" : $"{group * 10}% - {(group * 10) + 9}%";
+                    accuracyGroups[range]++;
+                }
+            }
+
+            // Criar o bar chart
+            var barChart = new BarChart()
+            .Width(60)
+            .Label("[bold yellow]Accuracy Distribution[/]")
+            .CenterLabel();
+
+            foreach (var group in accuracyGroups)
+                {
+                    barChart.AddItem(group.Key, group.Value, ConsoleColor.Cyan);
+                }
+
+            // Exibir o bar chart
+            AnsiConsole.Write(barChart);
+            AnsiConsole.Markup("\n[bold green]Press Enter to Return to Menu...[/]");
+            Console.ReadLine();
+
         }
     }
 }
